@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:shopapp/screens/cart_screen.dart';
+import 'package:shopapp/widgets/appdrawer.dart';
+import 'package:shopapp/widgets/badge.dart';
 import 'package:shopapp/widgets/product-item.dart';
-import 'package:shopapp/widgets/product_grid.dart';
+import '../widgets/product_grid.dart';
+import '../providers/cart.dart';
 import '../providers/product.dart';
+import 'package:provider/provider.dart';
 
 class OverviewScreen extends StatefulWidget {
+  static final routeName='/';
   OverviewScreen({Key? key}) : super(key: key);
   @override
   State<OverviewScreen> createState() => _OverviewScreenState();
@@ -18,8 +24,10 @@ class _OverviewScreenState extends State<OverviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    appBar: AppBar(title: Text("Overview"),actions: [
-      PopupMenuButton(
+    appBar: AppBar(
+        title: Text("Overview",style:Theme.of(context).textTheme.headlineSmall),
+        actions: [
+        PopupMenuButton(
           icon: Icon(Icons.opacity_rounded),
           itemBuilder:(_) => [
               PopupMenuItem(child: Text("Show all"),value:FilterOption.All ,),
@@ -35,8 +43,17 @@ class _OverviewScreenState extends State<OverviewScreen> {
                 _showFav=false;
               });
           }
-      )
+      ),
+      Consumer<Cart>(
+        builder: (_,cart,ch) => Badge(
+            child:ch!, value: cart.itemCount.toString(), color: Colors.pinkAccent
+        ),
+        child: IconButton(onPressed: (){
+          Navigator.of(context).pushNamed(CartScreen.routeName);
+        }, icon: Icon(Icons.shopping_bag_outlined)),
+      ),
     ],),
+    drawer: AppDrawer(),
     body:ProductGrid(_showFav),
     );
   }
