@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shopapp/providers/orders.dart';
+import 'package:shopapp/screens/edit_product.dart';
+import 'package:shopapp/screens/my_products.dart';
 import 'package:shopapp/screens/order_screen.dart';
 import 'package:shopapp/screens/product_detail.dart';
 import './screens/cart_screen.dart';
@@ -29,13 +31,14 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Shop App',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           accentColor: Colors.yellow,
           primarySwatch: Colors.cyan,
           textTheme: ThemeData.light().textTheme.copyWith(
             headlineSmall:GoogleFonts.montserrat(textStyle:TextStyle(fontSize: 17,color: Color.fromRGBO(30, 30, 30, 0.6),fontWeight: FontWeight.w600)),
             headlineMedium:GoogleFonts.montserrat(textStyle:TextStyle(fontSize: 20, color: Colors.cyan)),
-            headlineLarge:GoogleFonts.montserrat(textStyle:TextStyle(fontSize: 22,color: Colors.white,fontWeight: FontWeight.w400)),
+            headlineLarge:GoogleFonts.montserrat(textStyle:TextStyle(fontSize: 32,color: Colors.white,fontWeight: FontWeight.w400)),
             displaySmall: GoogleFonts.montserrat(textStyle:TextStyle(fontSize: 14,color: Colors.white,fontWeight: FontWeight.w300)),
             displayMedium: GoogleFonts.montserrat(textStyle:TextStyle(fontSize: 16,color: Colors.black,fontWeight: FontWeight.w400)),
           ),
@@ -46,6 +49,8 @@ class MyApp extends StatelessWidget {
           CartScreen.routeName : (ctx) => CartScreen(),
           ProductDetail.routeName:(ctx) => ProductDetail(),
           OrderScreen.routeName: (ctx) =>  OrderScreen(),
+          MyProducts.routeName: (ctx) => MyProducts(),
+          EditProductScreen.routeName : (ctx) => EditProductScreen()
         },
       ),
     );

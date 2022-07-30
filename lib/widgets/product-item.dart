@@ -34,6 +34,14 @@ class ProductItem extends StatelessWidget {
                 splashColor: Color.fromRGBO(200,18, 230, 0.7),
                 onPressed:(){
                   cart.addItem(product.id, product.title, product.price);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: Text("Item added to cart"),
+                        duration: Duration(seconds: 2),
+                        action:SnackBarAction(label: "Undo", onPressed: (){ cart.removeItem(product.id); }),
+
+                    )
+                  );
                   },
                 icon:Icon(Icons.add_shopping_cart_outlined),color: Theme.of(context).accentColor,
               ),

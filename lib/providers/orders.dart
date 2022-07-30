@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shopapp/providers/cart.dart';
-import 'package:shopapp/providers/product.dart';
+import '../providers/cart.dart';
+import '../providers/product.dart';
 
 
 class OrderItem{
@@ -23,7 +23,8 @@ class Order extends ChangeNotifier{
   }
 
   void addItem(double amount, List<CartItem> cartItems){
-    _items.putIfAbsent(DateTime.now().toString(), () => OrderItem(id: DateTime.now().toString(), amount: amount, dateTime: DateTime.now(), cartItems: cartItems));
+    String orderId=DateTime.now().toString();
+    _items.putIfAbsent(orderId, () => OrderItem(id: orderId, amount: amount, dateTime: DateTime.now(), cartItems: cartItems));
     notifyListeners();
   }
   void removeItem(String id){

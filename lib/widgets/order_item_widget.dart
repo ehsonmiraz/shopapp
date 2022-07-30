@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import '../providers/orders.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
 class OrderItemWidget extends StatelessWidget {
   final OrderItem orderItem;
-  final Function delete;
-  const OrderItemWidget({Key? key,required this.orderItem,required this.delete}) : super(key: key);
+
+  const OrderItemWidget({Key? key,required this.orderItem}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +17,21 @@ class OrderItemWidget extends StatelessWidget {
         child: Icon(Icons.delete,color: Colors.white,),
       ),
       direction: DismissDirection.endToStart,
-      onDismissed: (_){delete(orderItem.id);},
+      onDismissed: (_){
+        Provider.of<Order>(context,listen: false).removeItem(orderItem.id);
+
+        },
+      confirmDismiss: (DismissDirection d){
+        return showDialog(context: context, builder: (ctx) => AlertDialog(
+            title: Text("Are you sure?"),
+            content: Text("Delete this order"),
+            actions: [
+              FlatButton(onPressed: ()=> Navigator.of(context).pop(true), child: Text("Yes")),
+              FlatButton(onPressed: ()=> Navigator.of(context).pop(false), child: Text("No")),
+            ],
+          ));
+        },
+
       child: Card(
         margin: const EdgeInsets.symmetric(vertical: 5,horizontal: 19),
         elevation: 7,
@@ -53,7 +69,7 @@ class OrderItemWidget extends StatelessWidget {
 
                   ),
                   subtitle: Text("Time: ${DateFormat("dd-MM-yyyy hh:mm").format(orderItem.dateTime)}"),
-                  trailing: IconButton(onPressed: (){delete(orderItem.id);}, icon: Icon(Icons.cancel)),
+                  trailing: IconButton(onPressed:null, icon: Icon(Icons.radio_button_off_rounded)),
                 )
 
             ),
