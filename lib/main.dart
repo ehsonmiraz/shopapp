@@ -2,11 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shopapp/providers/orders.dart';
-import 'package:shopapp/screens/edit_product.dart';
-import 'package:shopapp/screens/my_products.dart';
-import 'package:shopapp/screens/order_screen.dart';
-import 'package:shopapp/screens/product_detail.dart';
+import './providers/orders.dart';
+import './screens/edit_product.dart';
+import './screens/my_products.dart';
+import './screens/order_screen.dart';
+import './screens/product_detail.dart';
 import './screens/cart_screen.dart';
 import './providers/products.dart';
 import './screens/overview_screen.dart';
