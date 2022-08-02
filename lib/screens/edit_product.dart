@@ -44,7 +44,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
      formValues["price"] = arguments.price;
      formValues["description"] = arguments.description;
      formValues["imgUrl"] = "";
-     imgUrlController.text = arguments.imageUrl;
+     imgUrlController.text = arguments.imgUrl;
     }
    }
 
@@ -61,26 +61,44 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
 
-
+  void openErrorDialog(BuildContext context){
+    showDialog(context: context, builder: (ctx){
+      return AlertDialog(
+        title: Text("Something went wrong"),
+        content: Text("Unable to add product at the moment"),
+        actions: [
+          FlatButton(
+              onPressed: (){
+                Navigator.of(context).pop();
+              },
+              child: Text("OK"))
+        ],);
+    }).then((value) {Navigator.of(context).pop();});
+  }
   void _submit(){
   if( !_form.currentState!.validate()){
     print("validate nhi hua");
     return ;
   }
     _form.currentState!.save();
+    setState((){isLoading=true;});
     var products =Provider.of<Products>(context,listen: false);
     if(isEditing) {
      Product product = Product(id: formValues['id'],
          title: formValues["title"],
          description: formValues['description'],
          price: formValues['price'],
-         imageUrl: formValues['imgUrl'],
+         imgUrl: formValues['imgUrl'],
          isFavourite :false,
      );
-     products.updateProduct(product);
+     products.updateProduct(product).then((_) {
+       Navigator.of(context).pop();
+     }).catchError((error){
+        openErrorDialog(context);
+     });
     }
     else{
-      setState((){isLoading=true;});
+
      products.addProduct(
          title: formValues["title"],
          description:formValues['description'],
@@ -91,18 +109,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
      }).catchError((error){
        print("error in alert");
        setState((){isLoading=false;});
-       showDialog(context: context, builder: (ctx){
-        return AlertDialog(
-            title: Text("Something went wrong"),
-            content: Text("Unable to add product at the moment"),
-            actions: [
-              FlatButton(
-                  onPressed: (){
-                    Navigator.of(context).pop();
-                  },
-                  child: Text("OK"))
-            ],);
-         }).then((value) {Navigator.of(context).pop();});
+       openErrorDialog(context);
 
      });
 

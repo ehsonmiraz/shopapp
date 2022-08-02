@@ -1,47 +1,43 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:shopapp/models/my_exception.dart';
 import 'package:shopapp/providers/product.dart';
 import'package:http/http.dart' as http ;
 class Products with ChangeNotifier{
 
-  final  List<Product> _items=
+
+    List<Product> _items=
   [
-    Product(
-      id: 'p1',
-      title: 'Red Shirt',
-      description: 'A red shirt - it is pretty red!',
-      price: 29.99,
-      imageUrl:
-      'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
-    ),
-    Product(
-      id: 'p2',
-      title: 'Trousers',
-      description: 'A nice pair of trousers.',
-      price: 59.99,
-      imageUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
-    ),
-    Product(
-      id: 'p3',
-      title: 'Yellow Scarf',
-      description: 'Warm and cozy - exactly what you need for the winter.',
-      price: 19.99,
-      imageUrl:
-      'https://live.staticflickr.com/4043/4438260868_cc79b3369d_z.jpg',
-    ),
-    Product(
-      id: 'p4',
-      title: 'A Pan',
-      description: 'Prepare any meal you want.',
-      price: 49.99,
-      imageUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    ),
+
   ];
 
   List<Product> get items{
     return [..._items] ;
+  }
+
+  Future<void> fetchAndSetProducts() async{
+    final url= Uri.parse("https://shop-app-87fed-default-rtdb.firebaseio.com/products.json");
+    final response = await http.get(url);
+    final dataListMap = json.decode(response.body) as Map<String,dynamic>;
+    List<Product> loadedProducts=[];
+    dataListMap.forEach((key, value ) {
+       loadedProducts.add(Product(
+           id: key,
+           title: value['title'],
+           description: value['description'],
+           price: value['price'].toDouble(),
+           imgUrl: value['imgurl']
+       )
+       ) ;
+
+    });
+    _items=loadedProducts;
+    print("items count he");
+    for(int i=0;i<20;i++)
+      {print("items count he : $itemsCount");}
+    notifyListeners();
+
   }
 
   List<Product> get favItems {
@@ -50,37 +46,73 @@ class Products with ChangeNotifier{
   int get itemsCount{
     return _items.length;
   }
-  Future<void> addProduct({required String title,required double price,required String description,required String imgUrl}){
+  Future<void> addProduct({required String title,required double price,required String description,required String imgUrl}) async{
     final url= Uri.parse("https://shop-app-87fed-default-rtdb.firebaseio.com/products.json");
-    return http.post(url,
-        body: json.encode({
-          "title": title,
-          "price": price,
-          "description": description,
-          "imgurl": imgUrl,
-        })
-    ).then((value){
-      var response=json.decode(value.body);
-      print(response);
-      _items.add(Product(id: response['name'], title: title, description: description, price: price, imageUrl: imgUrl));
+    try {
+      final response = await http.post(url,
+          body: json.encode({
+            "title": title,
+            "price": price,
+            "description": description,
+            "imgurl": imgUrl,
+          })
+      );
+      final recordId=json.decode(response.body)['name'];
+      _items.add(Product(id: recordId,
+          title: title,
+          description: description,
+          price: price,
+          imgUrl: imgUrl));
       notifyListeners();
-            }).catchError((error){
-              print(error.toString());
-              throw error;
-    });
+    }
+    catch(error){
+      print(error.toString());
+      throw error;
+    }
 
 
   }
 
-  void updateProduct(Product product){
-    int index = _items.indexWhere((item) { return item.id == product.id; });
-    print(index);
-    _items[index]=product;
+  Future<void> updateProduct(Product product) async{
+    final url= Uri.parse("https://shop-app-87fed-default-rtdb.firebaseio.com/products/${product.id}.json");
+    try {
+      await http.patch(url,
+          body: json.encode({
+            "title": product.title,
+            "price": product.price,
+            "description": product.description,
+            "imgurl": product.imgUrl,
+          })
+      );
+      int index = _items.indexWhere((item) { return item.id == product.id; });
+      print(index);
+      _items[index]=product;
+    }
+    catch(error){
+      throw error;
+    }
+
     notifyListeners();
   }
 
-   void deleteProduct(String id){
-    _items.removeWhere((product) => (product.id==id));
+  Future<void> deleteProduct(String id) async{
+    final url= Uri.parse("https://shop-app-87fed-default-rtdb.firebaseio.com/products/$id.son");
+    final index = _items.indexWhere((product) => (product.id==id));
+    Product? productBackup= _items[index] ;
+    _items.removeAt(index);
     notifyListeners();
-   }
+    print("hello birather  1 ");
+    try {
+      final response = await http.delete(url);
+       }
+    catch(error){
+      print("products catch");
+      _items.insert(index, productBackup!);
+      notifyListeners();
+      throw MyException("Unable to delete product");
+                }
+    finally{
+          productBackup = null;
+          }
+  }
 }

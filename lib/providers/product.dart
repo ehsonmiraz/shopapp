@@ -6,13 +6,13 @@ class Product with ChangeNotifier{
   final String title;
   final String description;
   final double price;
-  final String imageUrl;
+  final String imgUrl;
   bool  isFavourite;
 
   void toggleFavourite(){
     isFavourite=!isFavourite;
     notifyListeners();
   }
-  Product({ required this.id,required this.title,required this.description,required this.price,required this.imageUrl,this.isFavourite=false});
+  Product({ required this.id,required this.title,required this.description,required this.price,required this.imgUrl,this.isFavourite=false});
 
 }

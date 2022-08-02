@@ -23,7 +23,7 @@ class ProductItem extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(7),
         child: GridTile(
-            child: Image.network(product.imageUrl,fit: BoxFit.cover,),
+            child: Image.network(product.imgUrl,fit: BoxFit.cover,),
             footer: GridTileBar(
               backgroundColor:Colors.black54,
               leading:Consumer<Product>(

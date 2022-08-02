@@ -17,7 +17,7 @@ class ProductDetail extends StatelessWidget {
             Container(
               height: 300,
               width: double.infinity,
-              child: Image.network(product.imageUrl,fit: BoxFit.cover,),
+              child: Image.network(product.imgUrl,fit: BoxFit.cover,),
             ),
             SizedBox(height:10),
             Container(child: FittedBox(child: Text("\$ ${product.price}",style:Theme.of(context).textTheme.headlineSmall)),),

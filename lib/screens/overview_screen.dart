@@ -3,6 +3,7 @@ import 'package:shopapp/screens/cart_screen.dart';
 import 'package:shopapp/widgets/appdrawer.dart';
 import 'package:shopapp/widgets/badge.dart';
 import 'package:shopapp/widgets/product-item.dart';
+import '../providers/products.dart';
 import '../widgets/product_grid.dart';
 import '../providers/cart.dart';
 import '../providers/product.dart';
@@ -18,9 +19,27 @@ enum FilterOption {
   Favourites,
   All,
 }
+
 class _OverviewScreenState extends State<OverviewScreen> {
   bool _showFav=false;
+  bool _isLoading=true;
+  @override
+  void initState(){
 
+
+    super.initState();
+  }
+ @override
+ void didChangeDependencies(){
+
+     Provider.of<Products>(context,listen: false).fetchAndSetProducts().then((_){
+       setState((){
+         _isLoading=false;
+       });
+     });
+
+    super.didChangeDependencies();
+ }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,7 +73,8 @@ class _OverviewScreenState extends State<OverviewScreen> {
       ),
     ],),
     drawer: AppDrawer(),
-    body:ProductGrid(_showFav),
+    body:_isLoading?Center(child: CircularProgressIndicator(),):ProductGrid(_showFav),
+      floatingActionButton: FloatingActionButton(onPressed: Provider.of<Products>(context,listen: false).fetchAndSetProducts,),
     );
   }
 }
