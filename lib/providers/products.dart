@@ -33,9 +33,6 @@ class Products with ChangeNotifier{
 
     });
     _items=loadedProducts;
-    print("items count he");
-    for(int i=0;i<20;i++)
-      {print("items count he : $itemsCount");}
     notifyListeners();
 
   }
