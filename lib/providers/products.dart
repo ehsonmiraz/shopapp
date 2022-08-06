@@ -104,7 +104,7 @@ class Products with ChangeNotifier{
        }
     catch(error){
       print("products catch");
-      _items.insert(index, productBackup!);
+      _items.insert(index, productBackup);
       notifyListeners();
       throw MyException("Unable to delete product");
                 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shopapp/models/my_exception.dart';
 import '../providers/cart.dart';
 import '../providers/product.dart';
 import 'package:http/http.dart' as http;
@@ -23,47 +24,61 @@ class Order extends ChangeNotifier{
     return _items.length;
   }
 
-  void fetchAndSetItems() async{
+  Future<void> fetchAndSetItems() async{
     final url=Uri.parse("https://shop-app-87fed-default-rtdb.firebaseio.com/orders.json");
     final Map<String ,OrderItem> loadedOrders= {};
     try{
       final response = await http.get(url);
-      (json.decode(response.body) as Map<String,dynamic>).forEach((key, value) {
-        loadedOrders.putIfAbsent(key, () => OrderItem(id:key,amount:value['amount'],dateTime:value['dateTime'],cartItems: value['cartItems']));
+      (json.decode(response.body) as Map<String,dynamic>).forEach((orderId, value) {
+        loadedOrders.putIfAbsent(orderId, () => OrderItem(
+            id:orderId,
+            amount:value['amount'],
+            dateTime:DateTime.parse(value['dateTime']),
+            cartItems: (value['cartItems'] as List<dynamic>).map((cartItem) => CartItem(
+                title: cartItem['title'],
+                price: cartItem['price'],
+                id: cartItem['id'],
+                quantity: cartItem['quantity'],
+            )).toList(),
+        )
+        );
+        _items=loadedOrders;
+        notifyListeners();
+        print("sahi chla");
         //addItem(orderId:value['orderId'],amount:double.parse(value['amount']), cartItems:value['cartItems'] );
       }) ;
     }
     catch(error){
-
+        print("ordered not $error");
     }
   }
-  void addItem( double amount, List<CartItem> cartItems) async{
+  Future<void> addItem( double amount, List<CartItem> cartItems) async{
     final url=Uri.parse("https://shop-app-87fed-default-rtdb.firebaseio.com/orders.json");
     final Map<String ,dynamic> cartItemMap= {};
     final timestamp = DateTime.now();
-    cartItems.forEach((cartItem) {
-      cartItemMap.putIfAbsent(cartItem.id, () => {
-        'title' :cartItem.title,
-        'price':cartItem.price,
-        'quantity':cartItem.quantity
-      });
-    });
     try {
       final response = await http.post(url,
           body: json.encode(
               {
                 'amount': amount,
-                'cartItems': cartItemMap,
-                'dateTime':timestamp.toString(),
+                'cartItems': cartItems.map((cartItem) => {
+                              'id'    : cartItem.id,
+                              'title' :cartItem.title,
+                              'price':cartItem.price,
+                              'quantity':cartItem.quantity
+                              }).toList(),
+                'dateTime':timestamp.toIso8601String(),
               }
           )
       );
+      if(response.statusCode>=400)
+        throw MyException("Request couldn't be fulfilled");
       _items.putIfAbsent(response.body, () => OrderItem(id: response.body, amount: amount, dateTime: timestamp, cartItems: cartItems));
       notifyListeners();
     }
     catch(error){
      print(error);
-      // throw error;
+     throw error;
     }
 
   }
