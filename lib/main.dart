@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shopapp/screens/auth_screen.dart';
 import './providers/orders.dart';
 import './screens/edit_product.dart';
 import './screens/my_products.dart';
@@ -13,6 +14,7 @@ import './screens/overview_screen.dart';
 
 
 import 'providers/cart.dart';
+import 'services/auth.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -28,6 +30,7 @@ class MyApp extends StatelessWidget {
        ChangeNotifierProvider( create: (ctx) => Products(),),
        ChangeNotifierProvider( create: (ctx) => Cart(),),
        ChangeNotifierProvider(create: (ctx) => Order(),),
+       ChangeNotifierProvider(create: (ctx)=> Auth()),
       ],
       child: MaterialApp(
         title: 'Shop App',
@@ -40,11 +43,13 @@ class MyApp extends StatelessWidget {
             headlineMedium:GoogleFonts.montserrat(textStyle:TextStyle(fontSize: 20, color: Colors.cyan)),
             headlineLarge:GoogleFonts.montserrat(textStyle:TextStyle(fontSize: 32,color: Colors.white,fontWeight: FontWeight.w400)),
             displaySmall: GoogleFonts.montserrat(textStyle:TextStyle(fontSize: 14,color: Colors.white,fontWeight: FontWeight.w300)),
+
             displayMedium: GoogleFonts.montserrat(textStyle:TextStyle(fontSize: 16,color: Colors.black,fontWeight: FontWeight.w400)),
           ),
         ),
-        initialRoute: OverviewScreen.routeName,
+        initialRoute: AuthScreen.routeName,
         routes: {
+          AuthScreen.routeName: (ctx) => AuthScreen(),
           OverviewScreen.routeName:(ctx) => OverviewScreen(),
           CartScreen.routeName : (ctx) => CartScreen(),
           ProductDetail.routeName:(ctx) => ProductDetail(),

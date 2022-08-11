@@ -25,21 +25,16 @@ class _OverviewScreenState extends State<OverviewScreen> {
   bool _isLoading=true;
   @override
   void initState(){
-
-
+    Future.delayed(Duration.zero).then((value) {
+      Provider.of<Products>(context, listen: false).fetchAndSetProducts().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    });
     super.initState();
   }
- @override
- void didChangeDependencies(){
 
-     Provider.of<Products>(context,listen: false).fetchAndSetProducts().then((_){
-       setState((){
-         _isLoading=false;
-       });
-     });
-
-    super.didChangeDependencies();
- }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,10 +66,11 @@ class _OverviewScreenState extends State<OverviewScreen> {
           Navigator.of(context).pushNamed(CartScreen.routeName);
         }, icon: Icon(Icons.shopping_bag_outlined)),
       ),
-    ],),
+    ],
+    ),
     drawer: AppDrawer(),
     body:_isLoading?Center(child: CircularProgressIndicator(),):ProductGrid(_showFav),
-      floatingActionButton: FloatingActionButton(onPressed: Provider.of<Products>(context,listen: false).fetchAndSetProducts,),
+
     );
   }
 }

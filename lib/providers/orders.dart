@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shopapp/models/my_exception.dart';
+import 'package:shopapp/models/http_exception.dart';
 import '../providers/cart.dart';
 import '../providers/product.dart';
 import 'package:http/http.dart' as http;
@@ -72,8 +72,9 @@ class Order extends ChangeNotifier{
           )
       );
       if(response.statusCode>=400)
-        throw MyException("Request couldn't be fulfilled");
-      _items.putIfAbsent(response.body, () => OrderItem(id: response.body, amount: amount, dateTime: timestamp, cartItems: cartItems));
+        throw HttpException("Request couldn't be fulfilled");
+
+      _items.putIfAbsent(json.decode(response.body)['name'], () => OrderItem(id: response.body, amount: amount, dateTime: timestamp, cartItems: cartItems));
       notifyListeners();
     }
     catch(error){

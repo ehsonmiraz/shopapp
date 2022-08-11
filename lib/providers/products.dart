@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:shopapp/models/my_exception.dart';
+import 'package:shopapp/models/http_exception.dart';
 import 'package:shopapp/providers/product.dart';
 import'package:http/http.dart' as http ;
 class Products with ChangeNotifier{
@@ -106,7 +106,7 @@ class Products with ChangeNotifier{
       print("products catch");
       _items.insert(index, productBackup);
       notifyListeners();
-      throw MyException("Unable to delete product");
+      throw HttpException("Unable to delete product");
                 }
     finally{
           productBackup = null;
