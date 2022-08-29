@@ -5,6 +5,8 @@ import '../providers/cart.dart';
 import '../providers/product.dart';
 import 'package:provider/provider.dart';
 
+import '../services/auth.dart';
+
 class ProductItem extends StatelessWidget {
   //final Product product;
   //const ProductItem(this.product) ;
@@ -13,6 +15,7 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final Product product=Provider.of<Product>(context,listen: false);
     final Cart cart=Provider.of<Cart>(context);
+    final authData=Provider.of<Auth>(context,listen: false);
     return GestureDetector(
       onTap: (){
         Navigator.of(context).pushNamed(
@@ -27,7 +30,7 @@ class ProductItem extends StatelessWidget {
             footer: GridTileBar(
               backgroundColor:Colors.black54,
               leading:Consumer<Product>(
-                builder: (ctx,product, child) => IconButton( onPressed: product.toggleFavourite, icon:product.isFavourite?Icon(Icons.favorite):Icon(Icons.favorite_border),color: Theme.of(context).accentColor,) ,
+                builder: (ctx,product, child) => IconButton( onPressed: (){product.toggleFavourite(authData.token!,authData.userId!);}, icon:product.isFavourite?Icon(Icons.favorite):Icon(Icons.favorite_border),color: Theme.of(context).accentColor,) ,
               ),
               title: Text(product.title,style:Theme.of(context).textTheme.displaySmall),
               trailing:IconButton(

@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
    signup,
  }
 class AuthScreen extends StatelessWidget{
-  static final routeName ='auth';
+  static final routeName ='/auth';
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,11 @@ class AuthScreen extends StatelessWidget{
                     children: [
                       Flexible(
                         flex: 1,
-                        child: Center(child: Text("Welcome to Munna Shop",style: Theme.of(context).textTheme.headlineLarge,)),
+                        child: Consumer<Auth>(
+                          builder: (context,auth,_){
+                            return Center(child: Text("Welcome to Munna Shop",style: Theme.of(context).textTheme.headlineLarge,));
+                          },
+                        )
                       ),
                       Flexible(
                         flex:3,
@@ -86,11 +90,11 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
                   child: Text("OK"))
             ],);
         }).then((value) {
-            if(authchoice==Authchoice.login){_loginForm.currentState!.reset();
+            if(authchoice==Authchoice.login){//_loginForm.currentState!.reset();
             }
             else {
-              _signupForm.currentState!.reset();
-              _passcontroller.clear();
+              //_signupForm.currentState!.reset();
+              //_passcontroller.clear();
             }
         });
       }
@@ -107,6 +111,7 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
          try{
          switch(authchoice){
            case Authchoice.login :{
+
                if (_loginForm.currentState!.validate()) {
                  _loginForm.currentState!.save();
                  await Provider.of<Auth>(context, listen: false).login(
@@ -116,6 +121,7 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
                break;
              }
            case Authchoice.signup :{
+
                if (_signupForm.currentState!.validate()) {
                  _signupForm.currentState!.save();
                  await Provider.of<Auth>(context, listen: false).signup(
@@ -137,7 +143,7 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
             }
          }
          catch(error){
-              
+              print(error.toString());
          }
          setState((){
            isLoading=false;
@@ -199,7 +205,7 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: 10),
                       child: TextFormField(
-                        obscureText: true,
+                        obscureText: false,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.password_outlined,),
                           labelText: "Password",
@@ -220,7 +226,7 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
                       ),
                     ),
                     SizedBox(height:widget.dimensions.maxHeight*0.05 ,),
-                  _buildSubmitButton("Log in"),
+                    _buildSubmitButton("Log in"),
                 ],
               ),
             ),

@@ -10,7 +10,7 @@ import '../providers/product.dart';
 import 'package:provider/provider.dart';
 
 class OverviewScreen extends StatefulWidget {
-  static final routeName='/';
+  static final routeName='/overview-screen';
   OverviewScreen({Key? key}) : super(key: key);
   @override
   State<OverviewScreen> createState() => _OverviewScreenState();

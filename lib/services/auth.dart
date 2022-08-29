@@ -5,23 +5,29 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shopapp/screens/overview_screen.dart';
 class Auth extends ChangeNotifier{
-  late  String _token;
-  late DateTime _expirydate;
-  late String _userId;
-  bool get isAuthenticated{
+    String? _token;
+    DateTime? _expirydate;
+    String? _userId;
+    bool get isAuthenticated{
     if(token!=null)
        return true;
     return false;
   }
-  String? get token{
-    if(_expirydate!=null && _expirydate.isAfter(DateTime.now()) && _token!=null)
+    String? get token{
+    if(_expirydate!=null && _expirydate!.isAfter(DateTime.now()) && _token!=null)
       return _token;
     return null;
 
   }
+    String? get userId{
+      if(_expirydate!=null && _expirydate!.isAfter(DateTime.now()) && _userId!=null)
+        return _userId;
+      return null;
 
-   Future<void> login(String email,String password) async{
+    }
 
+    Future<void> login(String email,String password) async{
+     print("in login $password");
      final url=Uri.parse("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBAfwwoxSDa8vcGikJHOVNJR2phvZTjdhU");
      try {
        final response = await http.post(
@@ -33,11 +39,16 @@ class Auth extends ChangeNotifier{
            })
        );
        final responsedData=json.decode(response.body);
-       print(responsedData['error']['message']);
+       print(responsedData);
        if(responsedData['error']!=null) {
          print("ehson ehson");
          throw HttpException(responsedData['error']['message']);
        }
+       _userId=responsedData['localId'];
+       _token=responsedData['idToken'];
+       _expirydate= DateTime.now().add(Duration(seconds:int.parse(responsedData['expiresIn']) ));
+       print("no error in try");
+       notifyListeners();
      }
      catch(error){
        throw error;
@@ -47,6 +58,7 @@ class Auth extends ChangeNotifier{
   }
 
     Future<void> signup(String email,String password) async{
+    print("email : $email  pass: $password");
      final url=Uri.parse("https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBAfwwoxSDa8vcGikJHOVNJR2phvZTjdhU");
      final responsedData;
      try {
@@ -58,8 +70,9 @@ class Auth extends ChangeNotifier{
              "returnSecureToken": true,
            })
        );
-      // print("Signed up as ${response.body.toString()}");
+
        responsedData=json.decode(response.body);
+        print("Signed up as ${responsedData}");
        print(responsedData['error']['message']);
         if(responsedData['error']!=null){
           print("ehson ehson");
