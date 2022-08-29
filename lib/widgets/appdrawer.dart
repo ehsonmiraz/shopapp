@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
+import '../services/auth.dart' ;
 import '../screens/my_products.dart';
 import '../screens/order_screen.dart';
 import '../screens/overview_screen.dart';
+
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({Key? key}) : super(key: key);
@@ -49,6 +51,14 @@ class AppDrawer extends StatelessWidget {
               leading: Icon(Icons.card_travel_rounded),
               title: Text("My Products"),
               onTap: (){Navigator.pushReplacementNamed(context, MyProducts.routeName);},
+            ),
+            Divider(),
+            ListTile(
+              leading: Icon(Icons.exit_to_app),
+              title: Text("LogOut"),
+              onTap: (){
+                Provider.of<Auth>(context,listen: false).logOut();
+              },
             ),
             Divider(),
             SizedBox(height: 5,),

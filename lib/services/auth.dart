@@ -23,7 +23,6 @@ class Auth extends ChangeNotifier{
       if(_expirydate!=null && _expirydate!.isAfter(DateTime.now()) && _userId!=null)
         return _userId;
       return null;
-
     }
 
     Future<void> login(String email,String password) async{
@@ -84,4 +83,10 @@ class Auth extends ChangeNotifier{
      }
 
   }
+    void logOut(){
+      _token=null;
+      _userId=null;
+      _expirydate=null;
+      notifyListeners();
+    }
 }

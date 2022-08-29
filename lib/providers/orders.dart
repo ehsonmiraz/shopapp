@@ -17,7 +17,8 @@ class OrderItem{
 
 class Order extends ChangeNotifier{
   String? _token;
-  Order(this._token);
+  String? _userId;
+  Order(this._token,this._userId);
   Map<String ,OrderItem> _items={};
   Map<String ,OrderItem> get items{
     return {..._items};
@@ -27,7 +28,7 @@ class Order extends ChangeNotifier{
   }
 
   Future<void> fetchAndSetItems() async{
-    final url=Uri.parse("https://shop-app-87fed-default-rtdb.firebaseio.com/orders.json?auth=$_token");
+    final url=Uri.parse("https://shop-app-87fed-default-rtdb.firebaseio.com/orders/$_userId.json?auth=$_token");
     final Map<String ,OrderItem> loadedOrders= {};
     try{
       final response = await http.get(url);
@@ -55,7 +56,7 @@ class Order extends ChangeNotifier{
     }
   }
   Future<void> addItem( double amount, List<CartItem> cartItems) async{
-    final url=Uri.parse("https://shop-app-87fed-default-rtdb.firebaseio.com/orders.json?auth=$_token");
+    final url=Uri.parse("https://shop-app-87fed-default-rtdb.firebaseio.com/orders/$_userId.json?auth=$_token");
     final Map<String ,dynamic> cartItemMap= {};
     final timestamp = DateTime.now();
     try {

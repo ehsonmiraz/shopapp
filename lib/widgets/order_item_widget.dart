@@ -69,7 +69,7 @@ class OrderItemWidget extends StatelessWidget {
 
                   ),
                   subtitle: Text("Time: ${DateFormat("dd-MM-yyyy hh:mm").format(orderItem.dateTime)}"),
-                  trailing: IconButton(onPressed:null, icon: Icon(Icons.radio_button_off_rounded)),
+                  trailing: IconButton(onPressed:null, icon: Icon(Icons.track_changes_outlined)),
                 )
 
             ),
