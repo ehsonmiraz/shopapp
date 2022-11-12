@@ -21,7 +21,7 @@ class _CartScreenState extends State<CartScreen> {
         title: Text("Something went wrong"),
         content: Text("Unable to place order at the moment"),
         actions: [
-          FlatButton(
+          TextButton(
               onPressed: (){
                 Navigator.of(context).pop();
               },
@@ -54,7 +54,7 @@ class _CartScreenState extends State<CartScreen> {
                   backgroundColor: Colors.cyan,
                 ),
                 Spacer(),
-                FlatButton(
+                TextButton(
                     onPressed: cartItems.length<=0
                         ?null
                         :() async{

@@ -28,7 +28,7 @@ class _OrderScreenState extends State<OrderScreen> {
         title: Text("Something went wrong"),
         content: Text("Unable to place order at the moment"),
         actions: [
-          FlatButton(
+          TextButton(
               onPressed: (){
                 Navigator.of(context).pop();
               },

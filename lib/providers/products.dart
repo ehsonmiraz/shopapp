@@ -28,9 +28,10 @@ class Products with ChangeNotifier{
     final response = await http.get(urlProducts);
 
     try{
-      final dataListMap = json.decode(response.body) as Map<String,dynamic>;
+      final dataListMap = json.decode(response.body)as Map<String,dynamic> ;
       print(dataListMap);
       List<Product> loadedProducts=[];
+      print("34");
       dataListMap.forEach((key, value ) {
         loadedProducts.add(Product(
             id: key,
@@ -38,11 +39,10 @@ class Products with ChangeNotifier{
             description: value['description'],
             price: value['price'].toDouble(),
             imgUrl: value['imgurl'],
-            isFavourite: favStatusListMap[key] ==null ?false: favStatusListMap[key] as bool,
+            isFavourite: favStatusListMap == null ? false :favStatusListMap[key] ==null ?false: favStatusListMap[key] as bool,
         )
         ) ;
-
-
+        print("45");
         _items=loadedProducts;
       });
     }

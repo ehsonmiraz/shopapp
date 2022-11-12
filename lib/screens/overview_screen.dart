@@ -15,6 +15,7 @@ class OverviewScreen extends StatefulWidget {
   @override
   State<OverviewScreen> createState() => _OverviewScreenState();
 }
+
 enum FilterOption {
   Favourites,
   All,
@@ -64,7 +65,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
         ),
         child: IconButton(onPressed: (){
           Navigator.of(context).pushNamed(CartScreen.routeName);
-        }, icon: Icon(Icons.shopping_bag_outlined)),
+        }, icon:Icon(Icons.shopping_bag_outlined)),
       ),
     ],
     ),

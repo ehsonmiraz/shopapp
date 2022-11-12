@@ -9,28 +9,34 @@ class ProductDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     final Product product = ModalRoute.of(context)!.settings.arguments as Product;
     return Scaffold(
-      appBar: AppBar(title: Text("${product.title}",style:Theme.of(context).textTheme.headlineSmall)
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              height: 300,
-              width: double.infinity,
-              child: Image.network(product.imgUrl,fit: BoxFit.cover,),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(product.title),
+              background: Image.network(product.imgUrl,fit: BoxFit.cover,),
             ),
-            SizedBox(height:10),
-            Container(child: FittedBox(child: Text("\$ ${product.price}",style:Theme.of(context).textTheme.headlineSmall)),),
-            SizedBox(height:10),
-            Container(
-              padding: EdgeInsets.all(7),
-              child: Text(product.description,style:Theme.of(context).textTheme.displayMedium),
-            ),
+            pinned: true,
+            floating: false,
+            expandedHeight: 300,
+          ),
+          SliverList(
+              delegate: SliverChildListDelegate(
+              [
+              SizedBox(height:10),
+              Container(child: FittedBox(child: Text("\$ ${product.price}",style:Theme.of(context).textTheme.headlineSmall)), height: 30,),
+              SizedBox(height:10),
+              Container(
+                padding: EdgeInsets.all(7),
+                child: Text(product.description,style:Theme.of(context).textTheme.displayMedium),
+              ),
+                SizedBox(height:800)
+            ],
+          )
+          )
+        ],
+      )
 
-
-          ],
-        ),
-      ) ,
     );
   }
 }

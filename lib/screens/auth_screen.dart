@@ -11,12 +11,12 @@ import 'package:provider/provider.dart';
  }
 class AuthScreen extends StatelessWidget{
   static final routeName ='/auth';
-
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery
         .of(context)
         .size;
+
     return Container(
       decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -35,11 +35,8 @@ class AuthScreen extends StatelessWidget{
                     children: [
                       Flexible(
                         flex: 1,
-                        child: Consumer<Auth>(
-                          builder: (context,auth,_){
-                            return Center(child: Text("Welcome to Munna Shop",style: Theme.of(context).textTheme.headlineLarge,));
-                          },
-                        )
+                        child:Center(child: Text("Welcome to Acestore",style: Theme.of(context).textTheme.headlineLarge,))
+
                       ),
                       Flexible(
                         flex:3,
@@ -68,7 +65,7 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
       var _loginForm =GlobalKey<FormState>();
       var _signupForm =GlobalKey<FormState>();
       Map<String,String>  _authData={
-        'email':"",
+        'email':"e@gmail.com",
         'password':""
       };
       Authchoice authchoice= Authchoice.login;
@@ -83,7 +80,7 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
             title: Text("Error!"),
             content: Text(message),
             actions: [
-              FlatButton(
+              TextButton(
                   onPressed: (){
                     Navigator.of(context).pop();
                   },
@@ -165,9 +162,10 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
                     colors: [Colors.deepPurple, Colors.blueAccent, Colors.blue],
                   )
               ),
-            child: FlatButton(
-              splashColor: Colors.transparent,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+            child: TextButton(
+             // splashColor: Colors.transparent,
+              //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+
               onPressed: submit,
               child: Center(child: Text(title ,style: Theme.of(context).textTheme.headlineLarge,)),
             ),
@@ -186,9 +184,12 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: 10),
                       child: TextFormField(
+                        initialValue: "e@gmail.com",
                         decoration: InputDecoration(
                             prefixIcon: Icon(Icons.email_outlined,),
                             labelText: "Email",
+                            hintText: "e@gmail.com",
+
                             border :OutlineInputBorder(
                               borderRadius: BorderRadius.circular(22),
                             ),
@@ -205,10 +206,12 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: 10),
                       child: TextFormField(
-                        obscureText: false,
+                        obscureText: true,
+                        initialValue: "12345678",
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.password_outlined,),
                           labelText: "Password",
+                          hintText: "12345678",
                           border :OutlineInputBorder(
                             borderRadius: BorderRadius.circular(22),
                           ),
