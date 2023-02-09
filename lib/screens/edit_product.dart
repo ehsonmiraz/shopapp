@@ -67,7 +67,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
         title: Text("Something went wrong"),
         content: Text("Unable to add product at the moment"),
         actions: [
-          FlatButton(
+          TextButton(
               onPressed: (){
                 Navigator.of(context).pop();
               },

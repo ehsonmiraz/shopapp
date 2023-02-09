@@ -35,11 +35,7 @@ class AuthScreen extends StatelessWidget{
                     children: [
                       Flexible(
                         flex: 1,
-                        child: Consumer<Auth>(
-                          builder: (context,auth,_){
-                            return Center(child: Text("Welcome to Munna Shop",style: Theme.of(context).textTheme.headlineLarge,));
-                          },
-                        )
+                        child: Center(child: Text("Welcome to Munna Shop",style: Theme.of(context).textTheme.headlineLarge,)),
                       ),
                       Flexible(
                         flex:3,
@@ -75,6 +71,8 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
       var tabIndex = 0;
       late TabController _tabController;
       var _passcontroller=TextEditingController();
+      late AnimationController _animationController;
+      late Animation<Size> _heightAnimation;
       bool isLoading=false;
 
       Future<void> openErrorDialog(BuildContext context,String message){
@@ -83,7 +81,7 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
             title: Text("Error!"),
             content: Text(message),
             actions: [
-              FlatButton(
+              OutlinedButton(
                   onPressed: (){
                     Navigator.of(context).pop();
                   },
@@ -101,8 +99,11 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
 
       @override
       void initState(){
+        
+
         _tabController=TabController(length: 2, vsync: this);
         super.initState();
+        print(" goodfellas ");
       }
       void submit() async{
          setState((){
@@ -111,7 +112,6 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
          try{
          switch(authchoice){
            case Authchoice.login :{
-
                if (_loginForm.currentState!.validate()) {
                  _loginForm.currentState!.save();
                  await Provider.of<Auth>(context, listen: false).login(
@@ -121,7 +121,6 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
                break;
              }
            case Authchoice.signup :{
-
                if (_signupForm.currentState!.validate()) {
                  _signupForm.currentState!.save();
                  await Provider.of<Auth>(context, listen: false).signup(
@@ -165,9 +164,10 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
                     colors: [Colors.deepPurple, Colors.blueAccent, Colors.blue],
                   )
               ),
-            child: FlatButton(
-              splashColor: Colors.transparent,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+            child: TextButton(
+
+              //splashColor: Colors.transparent,
+              //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
               onPressed: submit,
               child: Center(child: Text(title ,style: Theme.of(context).textTheme.headlineLarge,)),
             ),
@@ -338,7 +338,6 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
                         tabs: [
                           Tab(child: Text("Login",style: Theme.of(context).textTheme.headlineMedium,)),
                           Tab(child: Text('Sign Up',style: Theme.of(context).textTheme.headlineMedium,)),
-
                         ],
                       ),
                     ),
@@ -347,6 +346,7 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
                         decoration: BoxDecoration(
                             border: Border(top: BorderSide(color: Colors.grey, width: 0.5))
                         ),
+
                         child: TabBarView(
                             controller: _tabController,
                             children: <Widget>[
@@ -360,7 +360,7 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
             if(isLoading)Container(
               height: widget.dimensions.maxHeight,
               width: widget.dimensions.maxWidth,
-              color: Color.fromRGBO(120, 120, 170, 0.7),
+              color: Color.fromRGBO(120, 120, 170, 0.5),
               child: Center(child: CircularProgressIndicator(),),
             )
           ],

@@ -60,7 +60,7 @@ class Products with ChangeNotifier{
   int get itemsCount{
     return _items.length;
   }
-  Future<void> addProduct({required String title,required double price,required String description,required String imgUrl}) async{
+  Future<void> addProduct1({required String title,required double price,required String description,required String imgUrl}) async{
     final url= Uri.parse("https://shop-app-87fed-default-rtdb.firebaseio.com/products.json?auth=$_token");
     try {
       final response = await http.post(url,
@@ -129,5 +129,34 @@ class Products with ChangeNotifier{
     finally{
           productBackup = null;
           }
+  }
+
+  Future<void> addProduct({required String title,required double price,required String description,required String imgUrl}) async{
+    final url= Uri.parse("https://shop-app-87fed-default-rtdb.firebaseio.com/products.json?auth=$_token");
+    final data= json.encode(
+      {
+        "title" :title,
+        "price" :price,
+        "description" :description,
+        "imgUrl" :imgUrl,
+        "creatorId":_userId,
+      }
+    );
+    try {
+      final response = await http.post(url, body: data);
+      final responseId=json.decode(response.body)['name'];
+      _items.add(Product(
+          id: responseId,
+          title: title,
+          description: description,
+          price: price,
+          imgUrl: imgUrl)
+      );
+      notifyListeners();
+    }
+    catch(error){
+      print(error.toString());
+      throw error;
+    }
   }
 }

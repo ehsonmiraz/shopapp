@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shopapp/screens/auth_screen.dart';
+import 'package:shopapp/screens/splash_screen.dart';
 import './providers/orders.dart';
 import './screens/edit_product.dart';
 import './screens/my_products.dart';
@@ -27,18 +28,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-
        ChangeNotifierProvider( create: (ctx) => Cart(),),
        ChangeNotifierProvider(create: (ctx)=> Auth()),
        ChangeNotifierProxyProvider<Auth,Products>(
            create: (ctx)=> Products("",""),
-           update: (BuildContext ctx,Auth auth,  Products? products)=> Products(auth.token, auth.userId )
+           update: (BuildContext ctx,Auth auth,  _)=> Products(auth.token, auth.userId )
        ),
-
-       ChangeNotifierProxyProvider<Auth,Order>(
-            create: (ctx)=> Order("",""),
-            update: (BuildContext ctx,Auth auth,  Order? order)=> Order(auth.token,auth.userId)
-        )
+       ChangeNotifierProxyProvider<Auth, Order>(
+           create: (ctx)=>Order("", ""),
+           update: (BuildContext context,Auth auth, _) => Order(auth.token, auth.userId)
+       )
       ],
       child: Consumer<Auth>(
         builder: (ctx,auth,_){
@@ -50,15 +49,21 @@ class MyApp extends StatelessWidget {
               accentColor: Colors.yellow,
               primarySwatch: Colors.cyan,
               textTheme: ThemeData.light().textTheme.copyWith(
-                headlineSmall:GoogleFonts.montserrat(textStyle:TextStyle(fontSize: 17,color: Color.fromRGBO(30, 30, 30, 0.6),fontWeight: FontWeight.w600)),
-                headlineMedium:GoogleFonts.montserrat(textStyle:TextStyle(fontSize: 20, color: Colors.cyan)),
-                headlineLarge:GoogleFonts.montserrat(textStyle:TextStyle(fontSize: 26,color: Colors.white,fontWeight: FontWeight.w400)),
-                displaySmall: GoogleFonts.montserrat(textStyle:TextStyle(fontSize: 14,color: Colors.white,fontWeight: FontWeight.w300)),
-
-                displayMedium: GoogleFonts.montserrat(textStyle:TextStyle(fontSize: 16,color: Colors.black,fontWeight: FontWeight.w400)),
+                headlineSmall:  GoogleFonts.montserrat(textStyle:TextStyle(fontSize: 17,color: Color.fromRGBO(30, 30, 30, 0.6),fontWeight: FontWeight.w600)),
+                headlineMedium: GoogleFonts.montserrat(textStyle:TextStyle(fontSize: 20, color: Colors.cyan)),
+                headlineLarge:  GoogleFonts.montserrat(textStyle:TextStyle(fontSize: 26,color: Colors.white,fontWeight: FontWeight.w400)),
+                displaySmall:   GoogleFonts.montserrat(textStyle:TextStyle(fontSize: 14,color: Colors.white,fontWeight: FontWeight.w300)),
+                displayMedium:  GoogleFonts.montserrat(textStyle:TextStyle(fontSize: 16,color: Colors.black,fontWeight: FontWeight.w400)),
               ),
             ),
-            home: auth.isAuthenticated?OverviewScreen():AuthScreen(),
+            home: auth.isAuthenticated
+                ?OverviewScreen()
+                :FutureBuilder(
+                future:auth.tryLoggingIn(),
+                builder: (BuildContext context,snapshot){
+                 return snapshot.connectionState==ConnectionState.waiting?SplashScreen():AuthScreen();
+
+                }),
             routes: {
               AuthScreen.routeName: (ctx) => AuthScreen(),
               OverviewScreen.routeName: (ctx) => OverviewScreen(),

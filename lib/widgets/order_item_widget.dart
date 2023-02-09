@@ -26,8 +26,8 @@ class OrderItemWidget extends StatelessWidget {
             title: Text("Are you sure?"),
             content: Text("Delete this order"),
             actions: [
-              FlatButton(onPressed: ()=> Navigator.of(context).pop(true), child: Text("Yes")),
-              FlatButton(onPressed: ()=> Navigator.of(context).pop(false), child: Text("No")),
+              TextButton(onPressed: ()=> Navigator.of(context).pop(true), child: Text("Yes")),
+              TextButton(onPressed: ()=> Navigator.of(context).pop(false), child: Text("No")),
             ],
           ));
         },
